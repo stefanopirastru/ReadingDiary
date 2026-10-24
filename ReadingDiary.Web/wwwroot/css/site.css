@@ -28,3 +28,20 @@ body {
 .input-validation-error {
     border-color: #dc3545 !important;
 }
+
+.custom-navbar {
+    background-color: #0d3b66;
+}
+
+.custom-navbar .nav-link {
+    color: white !important;
+}
+
+.custom-navbar .nav-link:hover {
+    color: #dbeafe !important;
+}
+
+.custom-navbar .navbar-brand {
+    color: white !important;
+    font-weight: 600;
+}
