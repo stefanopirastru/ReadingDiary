@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ReadingDiary.Api.Data;
+using ReadingDiary.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ApiKeyMiddleware>();
 
 app.MapControllers();
 
