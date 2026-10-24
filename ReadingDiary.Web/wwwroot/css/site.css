@@ -20,3 +20,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.min-vh-75 {
+    min-height: 75vh;
+}
+
+.input-validation-error {
+    border-color: #dc3545 !important;
+}

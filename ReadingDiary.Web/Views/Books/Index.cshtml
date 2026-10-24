@@ -1,130 +1,226 @@
 ﻿@model List<ReadingDiary.Web.Models.Book>
 
+
 <div class="container mt-4">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>📚 My Reading Diary</h1>
 
-        <a asp-controller="Books"
-           asp-action="Create"
+        <h1>📚 My Books</h1>
+
+        <a asp-action="Create"
            class="btn btn-primary">
             + Add Book
         </a>
+
     </div>
 
     <form method="get" class="mb-4">
-        <div class="input-group">
-            <input type="text"
-                   name="search"
-                   class="form-control"
-                   placeholder="Search by title or author..." />
 
-            <button class="btn btn-outline-secondary" type="submit">
-                Search
-            </button>
+        <div class="row g-2">
+
+            <div class="col-md-8">
+
+                <input type="text"
+                       name="search"
+                       value="@ViewBag.Search"
+                       class="form-control"
+                       placeholder="Search by title or author..." />
+
+            </div>
+
+            <div class="col-md-2">
+
+                <select name="pageSize"
+                        class="form-select">
+
+                    <option value="5" selected="@(ViewBag.PageSize == 5)">5</option>
+                    <option value="10" selected="@(ViewBag.PageSize == 10)">10</option>
+                    <option value="15" selected="@(ViewBag.PageSize == 15)">15</option>
+                    <option value="20" selected="@(ViewBag.PageSize == 20)">20</option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-2">
+
+                <button class="btn btn-primary w-100"
+                        type="submit">
+                    Search
+                </button>
+
+            </div>
+
         </div>
+
     </form>
 
-    <div class="row">
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
 
-        @foreach (var book in Model)
-        {
-            var cardClass = book.Status switch
+            <div class="display-1 mb-3">
+                📚
+            </div>
+
+            <h3>No books found</h3>
+
+            <p class="text-muted">
+                Try searching for a different title or author.
+            </p>
+
+            <a asp-action="Index"
+               class="btn btn-outline-primary">
+                Show all books
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <div class="row">
+
+            @foreach (var book in Model)
             {
-                "Completed" => "border-success",
-                "Reading" => "border-warning",
-                "To Read" => "border-secondary",
-                _ => "border-dark"
-            };
+                var cardClass = book.Status switch
+                {
+                    "Completed" => "border-success",
+                    "Reading" => "border-warning",
+                    "To Read" => "border-secondary",
+                    _ => "border-dark"
+                };
 
-            var badgeClass = book.Status switch
-            {
-                "Completed" => "bg-success",
-                "Reading" => "bg-warning text-dark",
-                "To Read" => "bg-secondary",
-                _ => "bg-dark"
-            };
+                var badgeClass = book.Status switch
+                {
+                    "Completed" => "bg-success",
+                    "Reading" => "bg-warning text-dark",
+                    "To Read" => "bg-secondary",
+                    _ => "bg-dark"
+                };
 
-            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="col-lg-4 col-md-6 mb-4">
 
-                <div class="card h-100 shadow-sm @cardClass">
+                    <div class="card h-100 shadow-sm @cardClass">
 
-                    <div class="card-body">
+                        <div class="card-body">
 
-                        <div class="d-flex justify-content-between mb-3">
+                            <div class="d-flex justify-content-between mb-3">
 
-                            <h5 class="card-title mb-0">
-                                @book.Title
-                            </h5>
+                                <h5 class="card-title">
+                                    @book.Title
+                                </h5>
 
-                            <span class="badge @badgeClass">
-                                @book.Status
-                            </span>
+                                <span class="badge @badgeClass">
+                                    @book.Status
+                                </span>
 
-                        </div>
-
-                        <h6 class="card-subtitle mb-3 text-muted">
-                            @book.Author
-                        </h6>
-
-                        <p>
-                            <strong>Progress:</strong>
-                            @book.CurrentPage / @book.TotalPages
-                        </p>
-
-                        @{
-                            var percentage = book.TotalPages > 0
-                            ? book.CurrentPage * 100 / book.TotalPages
-                            : 0;
-                        }
-
-                        <div class="progress mb-3">
-
-                            <div class="progress-bar"
-                                 role="progressbar"
-                                 style="width:@percentage%">
-                                @percentage%
                             </div>
 
+                            <h6 class="text-muted">
+                                @book.Author
+                            </h6>
+
+                            <p>
+                                <strong>Progress:</strong>
+                                @book.CurrentPage / @book.TotalPages
+                            </p>
+
+                            <p>
+                                <strong>Rating:</strong>
+                                ⭐ @book.Rating/5
+                            </p>
+
+                            @if (!string.IsNullOrWhiteSpace(book.Notes))
+                            {
+                                <p class="text-muted">
+                                    @book.Notes
+                                </p>
+                            }
+
                         </div>
 
-                        <p>
-                            <strong>Rating:</strong>
-                            ⭐ @book.Rating/5
-                        </p>
+                        <div class="card-footer bg-transparent">
 
-                        @if (!string.IsNullOrWhiteSpace(book.Notes))
-                        {
-                            <p class="text-muted">
-                                @book.Notes
-                            </p>
-                        }
+                            <div class="d-flex justify-content-end gap-2">
 
-                    </div>
+                                <a asp-action="Edit"
+                                   asp-route-id="@book.Id"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Edit
+                                </a>
 
-                    <div class="card-footer bg-transparent">
+                                <a asp-action="Delete"
+                                   asp-route-id="@book.Id"
+                                   class="btn btn-sm btn-outline-danger">
+                                    Delete
+                                </a>
 
-                        <div class="d-flex justify-content-end gap-2">
-
-                            <a asp-action="Edit"
-                               asp-route-id="@book.Id"
-                               class="btn btn-sm btn-outline-primary">
-                                Edit
-                            </a>
-
-                            <a asp-action="Delete"
-                               asp-route-id="@book.Id"
-                               class="btn btn-sm btn-outline-danger">
-                                Delete
-                            </a>
+                            </div>
 
                         </div>
 
                     </div>
 
                 </div>
+            }
 
-            </div>
-        }
+        </div>
 
-    </div>
+        <nav>
+
+            <ul class="pagination justify-content-center">
+
+                @if (ViewBag.CurrentPage > 1)
+                {
+                    <li class="page-item">
+
+                        <a class="page-link"
+                           asp-route-page="@(ViewBag.CurrentPage - 1)"
+                           asp-route-pageSize="@ViewBag.PageSize"
+                           asp-route-search="@ViewBag.Search">
+
+                            Previous
+
+                        </a>
+
+                    </li>
+                }
+
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+
+                        <a class="page-link"
+                           asp-route-page="@i"
+                           asp-route-pageSize="@ViewBag.PageSize"
+                           asp-route-search="@ViewBag.Search">
+
+                            @i
+
+                        </a>
+
+                    </li>
+                }
+
+                @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                {
+                    <li class="page-item">
+
+                        <a class="page-link"
+                           asp-route-page="@(ViewBag.CurrentPage + 1)"
+                           asp-route-pageSize="@ViewBag.PageSize"
+                           asp-route-search="@ViewBag.Search">
+
+                            Next
+
+                        </a>
+
+                    </li>
+                }
+
+            </ul>
+
+        </nav>
+    }
+
+</div>

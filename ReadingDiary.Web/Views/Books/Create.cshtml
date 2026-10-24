@@ -7,11 +7,15 @@
     <div class="mb-3">
         <label>Title</label>
         <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title"
+              class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label>Author</label>
         <input asp-for="Author" class="form-control" />
+        <span asp-validation-for="Author"
+              class="text-danger"></span>
     </div>
 
     <div class="mb-3">
@@ -27,16 +31,22 @@
     <div class="mb-3">
         <label>Current Page</label>
         <input asp-for="CurrentPage" class="form-control" />
+        <span asp-validation-for="CurrentPage"
+              class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label>Total Pages</label>
         <input asp-for="TotalPages" class="form-control" />
+        <span asp-validation-for="TotalPages"
+              class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label>Rating</label>
         <input asp-for="Rating" class="form-control" />
+        <span asp-validation-for="Rating"
+              class="text-danger"></span>
     </div>
 
     <div class="mb-3">
@@ -49,3 +59,15 @@
     </button>
 
 </form>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div asp-validation-summary="All"
+         class="alert alert-danger">
+    </div>
+}
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

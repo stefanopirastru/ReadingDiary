@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ReadingDiary.Web.Models;
 using System.Text;
-using System.Text.Json;
 
 namespace ReadingDiary.Web.Controllers;
 
@@ -19,7 +18,10 @@ public class BooksController : Controller
         _configuration = configuration;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(
+    string? search,
+    int page = 1,
+    int pageSize = 10)
     {
         var client = _httpClientFactory.CreateClient();
 
@@ -27,24 +29,47 @@ public class BooksController : Controller
             "X-API-KEY",
             _configuration["ApiSettings:ApiKey"]);
 
-        var response = await client.GetAsync(
-            $"{_configuration["ApiSettings:BaseUrl"]}/api/Books");
+        var url =
+            $"{_configuration["ApiSettings:BaseUrl"]}/api/Books?page={page}&pageSize={pageSize}";
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            url += $"&search={Uri.EscapeDataString(search)}";
+        }
+
+        var response = await client.GetAsync(url);
 
         if (!response.IsSuccessStatusCode)
         {
+            ViewBag.Search = search;
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.HasPreviousPage = false;
+            ViewBag.HasNextPage = false;
+
             return View(new List<Book>());
         }
 
         var json = await response.Content.ReadAsStringAsync();
 
-        var books = JsonSerializer.Deserialize<List<Book>>(
+        var result = JsonSerializer.Deserialize<PagedResult<Book>>(
             json,
             new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });
 
-        return View(books);
+        ViewBag.Search = search;
+
+        ViewBag.CurrentPage = result.Page;
+
+        ViewBag.PageSize = result.PageSize;
+
+        ViewBag.TotalPages = result.TotalPages;
+
+        ViewBag.TotalCount = result.TotalCount;
+
+        return View(result.Items);
     }
 
     public IActionResult Create()
@@ -55,6 +80,11 @@ public class BooksController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(Book book)
     {
+        if (!ModelState.IsValid)
+        {
+            return View(book);
+        }
+
         var client = _httpClientFactory.CreateClient();
 
         client.DefaultRequestHeaders.Add(
@@ -81,7 +111,7 @@ public class BooksController : Controller
     }
 
     public async Task<IActionResult> Edit(int id)
-    {
+    { 
         var client = _httpClientFactory.CreateClient();
 
         client.DefaultRequestHeaders.Add(
@@ -111,6 +141,11 @@ public class BooksController : Controller
     [HttpPost]
     public async Task<IActionResult> Edit(Book book)
     {
+        if(!ModelState.IsValid)
+        {
+            return View(book);
+        }
+
         var client = _httpClientFactory.CreateClient();
 
         client.DefaultRequestHeaders.Add(

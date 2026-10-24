@@ -17,7 +17,10 @@ public class BooksController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Book>>> GetBooks(string? search)
+    public async Task<ActionResult<PagedResult<Book>>> GetBooks(
+    string? search,
+    int page = 1,
+    int pageSize = 10)
     {
         var query = _context.Books.AsQueryable();
 
@@ -28,7 +31,22 @@ public class BooksController : ControllerBase
                 b.Author.Contains(search));
         }
 
-        return await query.ToListAsync();
+        var totalCount = await query.CountAsync();
+
+        var books = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var result = new PagedResult<Book>
+        {
+            Items = books,
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize
+        };
+
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
