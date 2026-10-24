@@ -61,12 +61,20 @@ public class BooksController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateBook(int id, Book book)
     {
-        if (id != book.Id)
+        var existingBook = await _context.Books.FindAsync(id);
+
+        if (existingBook == null)
         {
-            return BadRequest();
+            return NotFound();
         }
 
-        _context.Entry(book).State = EntityState.Modified;
+        existingBook.Title = book.Title;
+        existingBook.Author = book.Author;
+        existingBook.Status = book.Status;
+        existingBook.CurrentPage = book.CurrentPage;
+        existingBook.TotalPages = book.TotalPages;
+        existingBook.Rating = book.Rating;
+        existingBook.Notes = book.Notes;
 
         await _context.SaveChangesAsync();
 
