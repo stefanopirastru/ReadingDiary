@@ -1,0 +1,51 @@
+services:
+
+  mysql:
+    image: mysql:8.0
+
+    container_name: readingdiary-mysql
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: reading_diary
+
+    ports:
+      - "3307:3306"
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  api:
+    build:
+        context: .
+        dockerfile: ReadingDiary.Api/Dockerfile
+
+    environment:
+        ASPNETCORE_ENVIRONMENT: Production
+
+    container_name: readingdiary-api
+
+    ports:
+      - "7093:8080"
+
+    depends_on:
+      - mysql
+
+  web:
+    build:
+      context: .
+      dockerfile: ReadingDiary.Web/Dockerfile
+
+    environment:
+        ASPNETCORE_ENVIRONMENT: Production
+
+    container_name: readingdiary-web
+
+    ports:
+      - "5080:8080"
+
+    depends_on:
+      - api
+
+volumes:
+  mysql_data:

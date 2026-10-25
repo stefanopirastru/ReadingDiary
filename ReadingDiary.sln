@@ -7,6 +7,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadingDiary.Web", "Reading
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadingDiary.Api", "ReadingDiary.Api\ReadingDiary.Api.csproj", "{752297C9-229B-38E1-0B0D-0FC5E8BAF278}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadingDiary.Tests", "ReadingDiary.Tests\ReadingDiary.Tests.csproj", "{685638FA-DBE4-49DF-9185-2987CE0824A6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementi di soluzione", "Elementi di soluzione", "{9DF70304-0A22-CE1E-AA12-D5904EE55694}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+		restart-docker.bat = restart-docker.bat
+		start-docker.bat = start-docker.bat
+		stop-docker.bat = stop-docker.bat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +31,10 @@ Global
 		{752297C9-229B-38E1-0B0D-0FC5E8BAF278}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{752297C9-229B-38E1-0B0D-0FC5E8BAF278}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{752297C9-229B-38E1-0B0D-0FC5E8BAF278}.Release|Any CPU.Build.0 = Release|Any CPU
+		{685638FA-DBE4-49DF-9185-2987CE0824A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{685638FA-DBE4-49DF-9185-2987CE0824A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{685638FA-DBE4-49DF-9185-2987CE0824A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{685638FA-DBE4-49DF-9185-2987CE0824A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
