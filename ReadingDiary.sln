@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementi di soluzione", "Elementi di soluzione", "{9DF70304-0A22-CE1E-AA12-D5904EE55694}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
+		README.txt = README.txt
 		restart-docker.bat = restart-docker.bat
 		start-docker.bat = start-docker.bat
 		stop-docker.bat = stop-docker.bat
