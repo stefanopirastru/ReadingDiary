@@ -14,6 +14,12 @@ services:
 
     volumes:
       - mysql_data:/var/lib/mysql
+   
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   api:
     build:
@@ -21,7 +27,8 @@ services:
         dockerfile: ReadingDiary.Api/Dockerfile
 
     environment:
-        ASPNETCORE_ENVIRONMENT: Production
+        ASPNETCORE_ENVIRONMENT: Development
+        ConnectionStrings__DefaultConnection: "Server=mysql;Port=3306;Database=reading_diary;User=root;Password=root;"
 
     container_name: readingdiary-api
 
@@ -29,8 +36,8 @@ services:
       - "7093:8080"
 
     depends_on:
-      - mysql
-
+       mysql:
+        condition: service_healthy
   web:
     build:
       context: .
