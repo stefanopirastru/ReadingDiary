@@ -63,7 +63,6 @@ Questo approccio consente di ridurre il codice SQL manuale e mantenere una buona
 
 API Key Authentication
 Per soddisfare il requisito di sicurezza è stata implementata un'autenticazione tramite API Key utilizzando un middleware dedicato.
-La soluzione è semplice ma efficace e adatta al contesto della prova.
 
 
 Paginazione
@@ -87,11 +86,10 @@ Avvio con Visual Studio
 
 1. Aprire la solution.
 2. Configurare MySQL.
-3. Eseguire le migration.
-4. Impostare come startup project: 
+3. Impostare come startup project: 
 - ReadingDiary.Api
 - ReadingDiary.Web
-5. Avviare la soluzione.
+4. Avviare la soluzione.
 
 
 Avvio tramite Docker
